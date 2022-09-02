@@ -1,0 +1,121 @@
+.big-dot {
+    width: 40px;
+    height: 40px;
+    left: 276px;
+    top: 145px;
+    background: rgba(255, 35, 61, 0.1);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.card-inner.d-flex {
+    padding: 10px;
+}
+
+select.form-select {
+    width: 229px;
+    height: 40px;
+    left: 1188px;
+    top: 71px;
+    background: #FFFFFF;
+    border-radius: 4px;
+}
+
+.card-inner h4 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 27px;
+    color: #121212;
+    margin: 0;
+}
+
+.card-inner span {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 18px;
+    color: #717579;
+}
+
+.small-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.bg-grn {
+    background: #97E0A7;
+}
+
+.bg-bl {
+    background: #95E9E8;
+}
+
+.bg-vl {
+    background: #EFB6F9;
+}
+
+.bg-yl {
+    background: #EEEFAE;
+}
+
+.bg-dark-gn {
+    background: #A9CEA8;
+}
+
+.bg-pnk {
+    background: #FFACB8;
+}
+
+.card-div {
+    padding: 20px;
+}
+
+.dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #000;
+    margin: 0 15px 0 25px;
+}
+
+.border-div {
+    border-bottom: 1px solid #F7F9FD;
+    padding: 15px 0;
+}
+
+
+/* ********************************** */
+/**************************donut and graph *****************************/
+.doughnutChart h6 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #171B1E;
+    margin-bottom: 20px;
+}
+
+.doughnutChart {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 30px;
+    /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+}
+
+.chart_report {
+    display: grid;
+    grid-template-columns: 100% auto;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 33px 33px 18px 25px;
+    margin: 30px 0 10px 0;
+    /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+}
+
+.deal-dot {
+    background: rgb(207 0 57 / 85%) !important;
+}
