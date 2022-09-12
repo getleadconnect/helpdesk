@@ -14,9 +14,9 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('layouts.master');
-// });
+Route::get('/test', function () {
+    return view('timeline');
+});
 
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('login-user', [LoginController::class, 'verifyLogin'])->name('login-user');
@@ -31,5 +31,6 @@ Route::group(['middleware' => 'auth'], function ()
         Route::post('sort-tickets','sortTickets')->name('sort-tickets');
         Route::post('create-ticket','createTicket')->name('create-ticket');
         Route::post('view-ticket','viewTicket')->name('view-ticket');
+        Route::post('save-ticket-note','viewTicketNote')->name('save-ticket-note');
     });
 });

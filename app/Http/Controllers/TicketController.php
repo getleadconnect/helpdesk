@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use DB;
+use Auth;
 use Validator;
 use App\Models\User;
 use App\Models\Ticket;
@@ -13,6 +14,7 @@ use App\Models\TicketStatus;
 use App\Classes\HtmlContent;
 use App\Models\TicketGroup;
 use App\Models\TicketPriority;
+use App\Models\TicketNote;
 use App\Traits\CreateHtmlCode;
 
 class TicketController extends Controller
@@ -21,7 +23,13 @@ class TicketController extends Controller
 
     public function index()
     {   
-        $tickets = Ticket::leftJoin('users as t1','t1.id','tickets.opened_by')
+        $role_id = Auth::user()->role_id;
+        $user_id = Auth::user()->id;
+        $tickets = Ticket::where(function($q) use($role_id,$user_id)
+                            {
+                               $role_id != 1 ?  $q->where('assigned_to',$user_id) : '';     
+                            })
+                           ->leftJoin('users as t1','t1.id','tickets.opened_by')
                            ->leftJoin('users as t2','t2.id','tickets.assigned_to')
                            ->select('tickets.id','subject','description','t1.first_name as ticket_opened_by','t2.first_name as ticket_assigned_to','assigned_to','status_id','priority_id','tickets.created_at')
                            ->latest('tickets.created_at')
@@ -32,12 +40,17 @@ class TicketController extends Controller
                         ->select('status_id','ticket_statuses.name',DB::raw('count(*) as total'))
                         ->get();
 
+        $notes = TicketNote::leftJoin('users','users.id','ticket_notes.created_by')
+                            ->select('first_name','ticket_notes.created_at','note')
+                            ->latest('ticket_notes.created_at')
+                            ->get();  
+
         $agents = User::pluck('first_name','id');
         $statuses = TicketStatus::pluck('name','id');
         $priorities = TicketPriority::pluck('name','id');
         $enquiries = Enquiry::pluck('remarks','id');
         $groups = TicketGroup::pluck('name','id');
-        return view('tickets.dashboard',compact('tickets','statuses','priorities','agents','ticket_counts','groups','enquiries'));
+        return view('tickets.dashboard',compact('tickets','notes','statuses','priorities','agents','ticket_counts','groups','enquiries'));
     }
 
     public function getTicketCounts(Request $request)
@@ -143,8 +156,8 @@ class TicketController extends Controller
                     'priority_id' => $request->priority_id,
                     'status_id' => $request->status_id,
                     'enquiry_id'=> $request->enquiry_id,
-                    'created_by' => 2,
-                    'updated_by' => 2,
+                    'created_by' => Auth::user()->id,
+                    'updated_by' => Auth::user()->id,
                 ]);
                 return response()->json(['success'=>'New ticket created successfully !!!']);
             }    
@@ -162,5 +175,30 @@ class TicketController extends Controller
     {
       $ticket = Ticket::where('id',$request->ticket_id)->first();
       return response()->json(['ticket'=>$ticket]);
+    }
+
+    public function viewTicketNote(Request $request)
+    {
+        $row = TicketNote::create(['note'=>$request->note,
+                                   'ticket_id'=>$request->ticket_id,
+                                   'created_by'=>Auth::user()->id,
+                                   'updated_by'=>Auth::user()->id]);
+        
+        $data = TicketNote::where('ticket_id',$request->ticket_id)
+        ->leftJoin('users','users.id','ticket_notes.created_by')
+        ->select('first_name','ticket_notes.created_at','note')
+        ->latest('ticket_notes.created_at')
+        ->get();
+
+        $html = '';
+
+         foreach ($data as $key => $value) {
+                $html.='<li>
+                <a target="_blank" href="">'.$value->first_name.' changed the status</a>
+                <a href="#" class="float-right">'.date('jS M, Y', strtotime($value->created_at)).'</a>
+                <p>'.$value->note.'</p>
+                </li>';
+         }
+        return response()->json(['html_content'=>$html]);
     }
 }
