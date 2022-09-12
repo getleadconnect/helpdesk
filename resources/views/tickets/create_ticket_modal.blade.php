@@ -31,30 +31,6 @@ aria-hidden="true" id="create_ticket_modal">
                     </div>
                 </div>
             </div>
-            {{-- <div class="col">
-                <div class="form-group">
-                    <label for="exampleFormControlSelect1">Category</label>
-                    <select class="form-control" id="exampleFormControlSelect1">
-                        <option selected>Test Category</option>
-                    </select>
-                </div>
-            </div> --}}
-            {{-- </div> --}}
-            {{-- <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Product name</label>
-                        <input name="product_name" id="product_name" class="form-control" type="text" placeholder="Product name" value="Test Product Name">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Product part name</label>
-                        <input name="product_part_name" id="product_part_name" class="form-control" type="text" placeholder="Product part name" value="Test Product Part Name">
-                    </div>
-                </div>
-            </div> --}}
-            
             <div class="row">
                 <div class="col">
                     <div class="form-group">
@@ -104,4 +80,4 @@ aria-hidden="true" id="create_ticket_modal">
         </form>
     </div>
 </div>
-{{-- </div> --}}
+</div>

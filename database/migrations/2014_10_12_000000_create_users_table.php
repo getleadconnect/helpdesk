@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('customer_id', 191)->nullable()->default(null);
             $table->string('user_name')->nullable();
             $table->string('email')->unique();
+
+            $table->unsignedBigInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('user_roles')->onDelete('cascade');
+
             $table->integer('countrycode')->nullable()->default('91');
             $table->string('mobile', 191)->nullable()->default(null);
             $table->string('user_imei', 191)->nullable()->default(null);
