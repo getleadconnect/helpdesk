@@ -23,7 +23,7 @@ id="time_line_modal">
                         <button id="clear" class="btn btn-primary btn-sm"  type="button">Clear</button>
                         <div class="row">
                             <div class="col-md-12 notes-container">
-                                <ul class="timeline deal_timeline">
+                                <ul class="timeline deal_timeline" id="enquiry_notes">
                                     @foreach($notes as $note)
                                         <li>
                                             <a target="_blank" href="">{{ $note->first_name }} changed the status</a>

@@ -1154,14 +1154,17 @@ color: #1d1d1d;margin-right:30px"
                 
 
                 $(document).on('click', '.view_ticket_details', function() {
-                    _ticket_id =$(this).data('ticket-id')
+
+                    _ticket_id = $(this).data('ticket-id')
                     $.ajax({
                         type: 'POST',
                         url: "{{ URL::route('view-ticket') }}",
                         data: {
-                            ticket_id: $(this).data('ticket_id')
+                            ticket_id: $(this).data('ticket-id')
                         },
                         success: function(data) {
+                            $("#enquiry_notes").html('')
+                            $("#enquiry_notes").html(data.notes)
                             $("#time_line_modal").modal('show')
                         }
                     });

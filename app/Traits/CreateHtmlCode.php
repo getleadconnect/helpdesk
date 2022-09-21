@@ -78,7 +78,7 @@ trait CreateHtmlCode {
                                     <h5 class="mt-0 mb-1 view_ticket_details"><span>#00'.$ticket->id.' -</span> '.$ticket->subject.'  </h5>
                                     <p class="mb-2">'.$ticket->description.'</p>
                                     <div class="date-div">
-                                    <span>Created on: <span class="font-weight-bold">Oct 12,2022</span></span>
+                                    <span>Created on: <span class="font-weight-bold">'.date('jS M, Y', strtotime($ticket->created_at)).'</span></span>
                                     <span class="hide-m">|</span><br> <span>Opened by: <span class="font-weight-bold">'.$ticket->ticket_opened_by.'</span></span> 
                                     <span class="hide-m">|</span><br>
                                     <span>

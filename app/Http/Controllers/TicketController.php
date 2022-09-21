@@ -41,7 +41,8 @@ class TicketController extends Controller
                         ->select('status_id','ticket_statuses.name',DB::raw('count(*) as total'))
                         ->get();
 
-        $notes = TicketNote::leftJoin('users','users.id','ticket_notes.created_by')
+        $notes = TicketNote::where('ticket_id')
+                            ->leftJoin('users','users.id','ticket_notes.created_by')
                             ->select('first_name','ticket_notes.created_at','note')
                             ->latest('ticket_notes.created_at')
                             ->get();  
@@ -99,19 +100,22 @@ class TicketController extends Controller
 
     public function filterTickets(Request $request)
     {
-       
+
         $date = explode(' - ',$request->date);
 
         $date_from = $date[0]." 00:00:00";
         $date_to = $date[1]." 23:59:59";
-
+        
         $data = Ticket::where(function($q) use($request){
                         $request->opened_by ? $q->where('opened_by',$request->opened_by) : '' ;
                         })
                         ->where(function($q1) use($request){
                         $request->assigned_to ? $q1->where('assigned_to',$request->assigned_to) : '' ;
                         })
-                        ->whereDate('tickets.created_at', [$date_from, $date_to])
+                        ->where(function($q2) use($request){
+                            $request->assigned_to ? $q2->where('assigned_to',$request->assigned_to) : '' ;
+                        })
+                        // ->whereDate('tickets.created_at', [$date_from, $date_to])
                         ->leftJoin('users as t1','t1.id','tickets.opened_by')
                         ->leftJoin('users as t2','t2.id','tickets.assigned_to')
                         ->select('tickets.id','subject','description','t1.first_name as ticket_opened_by','t2.first_name as ticket_assigned_to','assigned_to','status_id','priority_id','tickets.created_at')
@@ -128,6 +132,7 @@ class TicketController extends Controller
         ->select('tickets.id','subject','description','t1.first_name as ticket_opened_by','t2.first_name as ticket_assigned_to','assigned_to','status_id','priority_id','tickets.created_at')
         ->latest('tickets.'.$request->sort_by)
         ->get();
+        
         return response()->json(['html_code'=>$this->HtmlCode($tickets)]);
     }
 
@@ -174,8 +179,18 @@ class TicketController extends Controller
 
     public function viewTicket(Request $request)
     {
-      $ticket = Ticket::where('id',$request->ticket_id)->first();
-      return response()->json(['ticket'=>$ticket]);
+      $notes = TicketNote::where('ticket_id',$request->ticket_id)->latest()->get();
+      $html ='';
+
+      foreach ($notes as $key => $value) {
+            $user = User::where('id',$value->created_by)->first()->first_name;
+            $html.='<li>
+            <a target="_blank" href="">'.$user.' changed the status</a>
+            <a href="#" class="float-right">'.date('jS M, Y', strtotime($value->created_at)).'</a>
+            <p>'.$value->note.'</p>
+            </li>';
+      }
+      return response()->json(['notes'=>$html]);
     }
 
     public function viewTicketNote(Request $request)
