@@ -106,6 +106,7 @@ class TicketController extends Controller
         $date_from = $date[0]." 00:00:00";
         $date_to = $date[1]." 23:59:59";
         
+        // dd($date_from."--from",$date_to."--to");
         $data = Ticket::where(function($q) use($request){
                         $request->opened_by ? $q->where('opened_by',$request->opened_by) : '' ;
                         })
@@ -115,7 +116,7 @@ class TicketController extends Controller
                         ->where(function($q2) use($request){
                             $request->assigned_to ? $q2->where('assigned_to',$request->assigned_to) : '' ;
                         })
-                        // ->whereDate('tickets.created_at', [$date_from, $date_to])
+                        ->whereBetween('tickets.created_at', [$date_from, $date_to])
                         ->leftJoin('users as t1','t1.id','tickets.opened_by')
                         ->leftJoin('users as t2','t2.id','tickets.assigned_to')
                         ->select('tickets.id','subject','description','t1.first_name as ticket_opened_by','t2.first_name as ticket_assigned_to','assigned_to','status_id','priority_id','tickets.created_at')
