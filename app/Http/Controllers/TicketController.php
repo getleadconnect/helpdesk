@@ -25,6 +25,7 @@ class TicketController extends Controller
     {   
         $role_id = Auth::user()->role_id;
         $user_id = Auth::user()->id;
+
         $tickets = Ticket::where(function($q) use($role_id,$user_id)
                             {
                                $role_id != 1 ?  $q->where('assigned_to',$user_id) : '';     
@@ -34,7 +35,7 @@ class TicketController extends Controller
                            ->select('tickets.id','subject','description','t1.first_name as ticket_opened_by','t2.first_name as ticket_assigned_to','assigned_to','status_id','priority_id','tickets.created_at')
                            ->latest('tickets.created_at')
                            ->get();
-
+                    
         $ticket_counts = Ticket::groupBy('status_id')
                         ->leftJoin('ticket_statuses','ticket_statuses.id','status_id')
                         ->select('status_id','ticket_statuses.name',DB::raw('count(*) as total'))
@@ -48,7 +49,7 @@ class TicketController extends Controller
         $agents = User::pluck('first_name','id');
         $statuses = TicketStatus::pluck('name','id');
         $priorities = TicketPriority::pluck('name','id');
-        $enquiries = Enquiry::pluck('remarks','id');
+        $enquiries = Enquiry::pluck('vchr_enquiry_feedback','id');
         $groups = TicketGroup::pluck('name','id');
         return view('tickets.dashboard',compact('tickets','notes','statuses','priorities','agents','ticket_counts','groups','enquiries'));
     }
@@ -72,7 +73,7 @@ class TicketController extends Controller
         {
             case 'update_agent':
                     $ticket->update([
-                        'agent_id' => $request->agent_id
+                        'assigned_to' => $request->agent_id
                     ]);
                 break;
             

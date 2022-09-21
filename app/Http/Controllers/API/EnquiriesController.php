@@ -46,6 +46,8 @@ class EnquiriesController extends BaseController
             'vchr_enquiry_feedback' => 'required',
             'fk_int_enquiry_type_id' => 'required',
         ]);
+
+        // dd($request->all());
    
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors(),400);       
@@ -57,6 +59,8 @@ class EnquiriesController extends BaseController
                     'created_by' => auth('sanctum')->id(),
                     'updated_by' => auth('sanctum')->id(),
                 ]);
+
+                dd($data);
                 return $this->sendResponse($data, 'Successfully Created');
             }    
             catch(Exception $e)  
